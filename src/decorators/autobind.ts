@@ -1,38 +1,38 @@
 // tslint:disable:no-invalid-this
-export default function (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<Function>): TypedPropertyDescriptor<any> {
+export default function (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<Function>) {
   let actualFn: Function = descriptor.value;
 
   if (typeof actualFn !== 'function') {
     throw new Error(`Cannot autobind: ${typeof actualFn}`);
   }
 
-  return {
-    configurable: true,
-    get(): Function {
-      if (this === target.prototype || this.hasOwnProperty(propertyKey) || typeof actualFn !== 'function') {
-        return actualFn;
-      }
+  // return {
+  //   configurable: true,
+  //   get(): Function {
+  //     if (this === target.prototype || this.hasOwnProperty(propertyKey) || typeof actualFn !== 'function') {
+  //       return actualFn;
+  //     }
 
-      const bindedFn: Function = actualFn.bind(this);
+  //     const bindedFn: Function = actualFn.bind(this);
 
-      Object.defineProperty(this, propertyKey, {
-        configurable: true,
-        get(): Function {
-          return bindedFn;
-        },
-        set(value: Function) {
-          actualFn = value;
+  //     Object.defineProperty(this, propertyKey, {
+  //       configurable: true,
+  //       get(): Function {
+  //         return bindedFn;
+  //       },
+  //       set(value: Function) {
+  //         actualFn = value;
 
-          // tslint:disable-next-line:no-dynamic-delete
-          delete this[propertyKey];
-        }
-      });
+  //         // tslint:disable-next-line:no-dynamic-delete
+  //         delete this[propertyKey];
+  //       }
+  //     });
 
-      return bindedFn;
-    },
-    set(value: Function) {
-      actualFn = value;
-    }
-  };
+  //     return bindedFn;
+  //   },
+  //   set(value: Function) {
+  //     actualFn = value;
+  //   }
+  // };
 }
 

@@ -1,4 +1,4 @@
-import { Message } from './declarations';
+type Message = import('./declarations').Message;
 
 /**
  * Content script is called by the browser for each page that loads.

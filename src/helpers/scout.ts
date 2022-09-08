@@ -1,8 +1,4 @@
-import { DevInspector } from '@stencil/core/dist/declarations';
-import { ValueObject } from '~helpers/declarations';
-
-import * as d from './declarations';
-
+//
 /**
  * Scout is a special component of the extension.
  * It is a singleton injected by the "injector", but communicates with it via content and background scripts.
@@ -14,7 +10,7 @@ import * as d from './declarations';
     private static _instance: Scout;
 
     /** The current devInspector object injected by Stencil itself */
-    private devInspector: DevInspector = (window as any).devInspector || null;
+    private devInspector: (e: Element) => import('./declarations').DevInspectorMeta = (window as any).stencil.inspect || null;
 
     /** Flag for indicating if component computation is in progress */
     private processing = false;
@@ -197,8 +193,8 @@ import * as d from './declarations';
      *
      * In the case of props, we need to pass some flags to the value object to build the edit feature.
      */
-    private mapValue(members: d.MemberUnion[], instance, parsedKeys: string[], canEdit = false, editInstance = false): d.MembersMap {
-      return members.reduce<d.MembersMap>((acc, member) => {
+    private mapValue(members: any[], instance, parsedKeys: string[], canEdit = false, editInstance = false): import('./declarations').MembersMap {
+      return members.reduce<import('./declarations').MembersMap>((acc, member) => {
         const {
           name,
           event,
@@ -211,7 +207,7 @@ import * as d from './declarations';
 
         parsedKeys.push(valueName);
 
-        const value: ValueObject<any> = {
+        const value: import('./declarations').ValueObject<any> = {
           __stencil_obj_type__: 'value',
           value: instance[valueName]
         };
@@ -261,6 +257,7 @@ import * as d from './declarations';
     /** Build a big object from instance and it's prototype */
     private buildFullInstance(instance: object): object {
       const result = {};
+      if (!instance) return result;
 
       const instanceKeys = Object.getOwnPropertyNames(instance);
 
@@ -269,7 +266,12 @@ import * as d from './declarations';
       const instanceProto = Object.getPrototypeOf(instance);
       const protoKeys = Object.getOwnPropertyNames(instanceProto);
 
-      protoKeys.forEach(protoKey => result[protoKey] = instanceProto[protoKey]);
+      protoKeys.forEach(protoKey => {
+        try { result[protoKey] = instanceProto[protoKey]; }
+        catch(e) { result[protoKey] = instance[protoKey] }
+      });
+
+      console.log('returning', result);
 
       return result;
     }
@@ -294,36 +296,24 @@ import * as d from './declarations';
 
           this.processing = true;
           this.currentElement = newElement;
-          this.currentComponentInstance = (await this.devInspector.getInstance(newElement)) || null;
+          this.currentComponentInstance = (await this.devInspector(newElement)) || null;
+
+          console.log('I GOT ', this.currentComponentInstance)
 
           const currentInstance = this.currentComponentInstance;
 
           if (currentInstance) {
             const {
-              instance,
+              lazyInstance,
             } = currentInstance;
 
-            const fullInstance = this.buildFullInstance(instance);
+            const fullInstance = this.buildFullInstance(lazyInstance);
 
             const parsedKeys = [];
 
-            let {
-              props,
-              states,
-              elements,
-              methods,
-              events: {
-                emmiters,
-                listeners
-              }
-            } = currentInstance.meta;
-
-            props = this.mapValue(props as any, fullInstance, parsedKeys, true);
-            states = this.mapValue(states as any, fullInstance, parsedKeys, true, true);
-            elements = this.mapValue(elements as any, fullInstance, parsedKeys);
-            methods = this.mapValue(methods as any, fullInstance, parsedKeys);
-            emmiters = this.mapValue(emmiters as any, fullInstance, parsedKeys);
-            listeners = this.mapValue(listeners as any, fullInstance, parsedKeys);
+            // let {
+            //   lazyInstance
+            // } = currentInstance.meta;
 
             const lifecycleMethods = this.mapValue([
               { name: 'componentWillLoad' },
@@ -334,7 +324,16 @@ import * as d from './declarations';
               { name: 'render' }
             ] as any, fullInstance, parsedKeys);
 
-            const remainingKeys = this.mapValue(
+            // let props = this.mapValue(Object.entries(lazyInstance as any), fullInstance, parsedKeys, true);
+            // states = this.mapValue(states as any, fullInstance, parsedKeys, true, true);
+            // elements = this.mapValue(elements as any, fullInstance, parsedKeys);
+            // methods = this.mapValue(methods as any, fullInstance, parsedKeys);
+            // emmiters = this.mapValue(emmiters as any, fullInstance, parsedKeys);
+            // listeners = this.mapValue(listeners as any, fullInstance, parsedKeys);
+
+            // const remainingKeys =
+
+            const props = this.mapValue(
               Object
                 .keys(fullInstance)
                 .filter(key => !parsedKeys.includes(key))
@@ -346,15 +345,15 @@ import * as d from './declarations';
             msg.status.success = true;
             msg.categories = [
               { label: 'Props', items: props },
-              { label: 'States', items: states },
-              { label: 'Elements', items: elements },
-              { label: 'Methods', items: methods },
-              { label: 'Events', items: {
-                  emitters: emmiters,
-                  listeners
-                } },
+              // { label: 'States', items: states },
+              // { label: 'Elements', items: elements },
+              // { label: 'Methods', items: methods },
+              // { label: 'Events', items: {
+              //     emitters: emmiters,
+              //     listeners
+              //   } },
               { label: 'Lifecycle Methods', items: lifecycleMethods },
-              { label: 'Other Items', items: remainingKeys }
+              // { label: 'Other Items', items: remainingKeys }
             ];
           } else {
             msg.status.message = 'The element is not a Stencil component.';
@@ -382,5 +381,7 @@ import * as d from './declarations';
    *
    * This piece of code is quite important since it also forces the instance to be created.
    */
+
+
   (window as any).__STENCIL_INSPECTOR__ = Scout.Instance;
 })();

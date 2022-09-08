@@ -1,31 +1,21 @@
 {
   "compilerOptions": {
     "baseUrl": ".",
-    "rootDir": "src",
     "target": "esnext",
     "jsx": "react",
     "jsxFactory": "h",
-    "module": "es2015",
+    "module": "esnext",
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "declaration": false,
-    "noImplicitAny": false,
-    "noImplicitReturns": false,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "strictNullChecks": false,
-    "outDir": "dist",
+    "allowSyntheticDefaultImports": true,
+    "allowUnreachableCode": false,
     "lib": [
-      "es6",
-      "es7",
-      "esnext",
+      "es2017",
       "dom"
-    ],
-    "plugins": [
-      {
-        "name": "tslint-language-service"
-      }
     ],
     "paths": {
       "~components/*": [
@@ -43,6 +33,6 @@
     "node_modules"
   ],
   "include": [
-    "./**/*"
+    "src"
   ]
 }

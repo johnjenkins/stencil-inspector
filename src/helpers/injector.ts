@@ -1,6 +1,5 @@
-import { Main } from '../components/main/main';
-
-import * as d from './declarations';
+import type { Main } from '../components/main/main';
+import type * as d from './declarations';
 
 export class Injector {
   private static _instance: Injector;
@@ -9,10 +8,10 @@ export class Injector {
   private bgScriptLink: chrome.runtime.Port;
 
   /** Reference to the panel */
-  private uiInstance: Main = null;
+  private uiInstance: Main | null = null;
 
   private constructor() {
-    /** Create a connection to the background page */
+    /** Create a connection to the backgr page */
     this.bgScriptLink = chrome.runtime.connect({
       name: 'stencil-inspector'
     });
@@ -36,7 +35,7 @@ export class Injector {
     });
 
     /** Listen for messages from background script */
-    this.bgScriptLink.onMessage.addListener((message: d.Message) => {
+    this.bgScriptLink.onMessage.addListener((message: import('./declarations').Message) => {
       const {
         data: {
           sender,
@@ -77,14 +76,14 @@ export class Injector {
   /** Handle the messages received from scout */
   private scoutMsgHandler(type: string, value: any) {
     if (type === 'component') {
-      const parsedData: d.ParsedGroupData = {
+      const parsedData: import('./declarations').ParsedGroupData = {
         categories: [],
         ...value
       };
 
-      parsedData.categories = ((value.categories || []) as d.CategoryData[])
-        .map<d.ParsedCategoryData>((category: d.CategoryData) => {
-          const parsedCategory: d.ParsedCategoryData = {
+      parsedData.categories = ((value.categories || []) as import('./declarations').CategoryData[])
+        .map<import('./declarations').ParsedCategoryData>((category: import('./declarations').CategoryData) => {
+          const parsedCategory: import('./declarations').ParsedCategoryData = {
             label: category.label,
             items: []
           };
@@ -93,7 +92,7 @@ export class Injector {
             const items = category.items;
 
             if (Array.isArray(category.items)) {
-              parsedCategory.items = (items as d.MemberData[])
+              parsedCategory.items = (items as import('./declarations').MemberData[])
                 .map((item, index) => this.createItem({
                   label: index
                 }, item));
@@ -138,7 +137,7 @@ export class Injector {
         if (!window.__STENCIL_INSPECTOR__) {
           const script = document.constructor.prototype.createElement.call(document, 'script');
           script.type = 'text/javascript';
-          script.src = '${chrome.extension.getURL('helpers/scout.js')}';
+          script.src = '${chrome.runtime.getURL('helpers/scout.js')}';
 
           script.onload = () => {
             document.body.removeChild(script);
@@ -178,7 +177,7 @@ export class Injector {
   }
 
   /** Create a readable item for the panel */
-  private createItem(receivedItem: Partial<d.ItemData>, actualValue: any): d.ItemData {
+  private createItem(receivedItem: Partial<import('./declarations').ItemData>, actualValue: any): d.ItemData {
     let item: d.ItemData = {
       label: '__unknown__',
       type: typeof actualValue,

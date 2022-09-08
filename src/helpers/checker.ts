@@ -12,7 +12,7 @@
       data: {
         sender: 'checker',
         type: 'check',
-        value: window.hasOwnProperty('devInspector')
+        value: window.hasOwnProperty('stencil')
       },
       source: 'stencil-inspector'
     }, '*');

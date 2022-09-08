@@ -1,16 +1,20 @@
 {
   "extends": "../../tsconfig.json",
+  "module": "commonjs",
+  "target": "es5",
   "compilerOptions": {
     "outDir": "../../www",
     "inlineSourceMap": true,
-    "inlineSources": true
+    "inlineSources": true,
   },
   "include": [],
   "files": [
     "background-script.ts",
     "checker.ts",
     "content-script.ts",
-    "declarations.ts",
     "scout.ts"
+  ],
+  "types": [
+    "declarations.d.ts",
   ]
 }

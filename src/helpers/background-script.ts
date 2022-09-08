@@ -1,5 +1,3 @@
-import * as d from './declarations';
-
 /**
  * Background Script has two roles:
  *   - intermediate discussions between all parts of the extension: injector, checker, scout
@@ -7,16 +5,16 @@ import * as d from './declarations';
  */
 (() => {
   /** A map of opened tabs and the result of the checker */
-  const tabsMap: d.TabsMap = {};
+  const tabsMap: import('./declarations').TabsMap = {};
 
   /** A map of devtools connections and the corresponding port */
-  const devToolsMap: d.InjectorsMap = {};
+  const devToolsMap: import('./declarations').InjectorsMap = {};
 
   /** Listen for connections from devTools */
   chrome.runtime.onConnect.addListener(port => {
     let inspectedTabId: number;
 
-    const extensionListener = (message: d.Message<number>) => {
+    const extensionListener = (message: import('./declarations').Message<number>) => {
       const {
         source,
         data
@@ -77,7 +75,7 @@ import * as d from './declarations';
   });
 
   /** Listen for messages from content script */
-  chrome.runtime.onMessage.addListener((request: d.Message, sender) => {
+  chrome.runtime.onMessage.addListener((request: import('./declarations').Message, sender) => {
     if (!sender.tab) {
       /** We don't do anything here */
     } else if (request && request.data && request.data.sender === 'checker') {
@@ -86,16 +84,16 @@ import * as d from './declarations';
 
       const suffix = tabsMap[sender.tab.id] ? '' : '-disabled';
 
-      chrome.browserAction.setIcon({
+      chrome.action.setIcon({
         tabId: sender.tab.id,
         path: {
-          16: `images/stencil-logo${suffix}-16x16.png`,
-          48: `images/stencil-logo${suffix}-48x48.png`,
-          128: `images/stencil-logo${suffix}-128x128.png`
+          16: `../images/stencil-logo${suffix}-16x16.png`,
+          48: `../images/stencil-logo${suffix}-48x48.png`,
+          128: `../images/stencil-logo${suffix}-128x128.png`
         }
       });
 
-      chrome.browserAction.setPopup({
+      chrome.action.setPopup({
         tabId: sender.tab.id,
         popup: tabsMap[sender.tab.id] ? 'enabled.html' : 'disabled.html'
       });

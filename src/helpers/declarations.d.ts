@@ -1,4 +1,5 @@
-import { DevInspectorEmmiterMeta, DevInspectorListenerMeta } from '@stencil/core/dist/declarations';
+import type { VNode, ComponentInterface } from '@stencil/core';
+import type { HTMLStencilElement, RenderNode } from '@stencil/core/internal';
 
 export interface TabsMap {
   [tabId: number]: boolean;
@@ -55,8 +56,6 @@ export interface MemberData {
   value: ValueObject<any>;
 }
 
-export type MemberUnion = MemberData & DevInspectorEmmiterMeta & DevInspectorListenerMeta;
-
 export interface EmitterData {
   bubbles: boolean;
   cancelable: boolean;
@@ -102,4 +101,39 @@ export interface ParsedGroupData {
     message: string;
   };
   categories: ParsedCategoryData[];
+}
+
+export interface DevInspectorMeta {
+  renderCount: number;
+  flags: {
+    hasRendered: boolean;
+    hasConnected: boolean;
+    isWaitingForChildren: boolean;
+    isConstructingInstance: boolean;
+    isQueuedForUpdate: boolean;
+    hasInitializedComponent: boolean;
+    hasLoadedComponent: boolean;
+    isWatchReady: boolean;
+    isListenReady: boolean;
+    needsRerender: boolean;
+  };
+  instanceValues: Map<string, any>;
+  ancestorComponent: HTMLStencilElement;
+  hostElement: HTMLStencilElement;
+  lazyInstance: ComponentInterface;
+  vnode: VNode;
+  modeName: string;
+  onReadyPromise: Promise<any>;
+  onReadyResolve: (elm: any) => void;
+  onInstancePromise: Promise<any>;
+  onInstanceResolve: (elm: any) => void;
+  onRenderResolve: () => void;
+  queuedListeners: [string, any][];
+  rmListeners: (() => void)[];
+  "s-id": string;
+  "s-cr": RenderNode;
+  "s-lr": boolean;
+  "s-p": Promise<void>[];
+  "s-rc": (() => void)[];
+  "s-sc": string;
 }

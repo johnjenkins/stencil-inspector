@@ -1,4 +1,4 @@
-import { Component, State } from '@stencil/core';
+import { Component, State, h } from '@stencil/core';
 
 import autobind from '~decorators/autobind';
 import { Injector } from '~helpers/injector';
@@ -31,6 +31,7 @@ export class Main {
 
   @autobind
   changeComponent(component: ParsedGroupData) {
+    console.log('????')
     this.component = component;
     this.loading = false;
   }
@@ -55,7 +56,7 @@ export class Main {
     );
   }
 
-  protected render() {
+  render() {
     const {
       success,
       message
@@ -69,6 +70,8 @@ export class Main {
     } else if (itemsKeys.length === 0) {
       actualMessage = `Component has no items.`;
     }
+
+    console.log('render', itemsKeys, actualMessage)
 
     return [
       <sti-logo class="logo" dark={this.dark} />,

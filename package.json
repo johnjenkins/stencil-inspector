@@ -1,8 +1,8 @@
 {
   "name": "@stencil/inspector",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "license": "MIT",
-  "main": "dist/sti.js",
+  "main": "dist/stencil-inspector.js",
   "types": "dist/types/index.d.ts",
   "collection": "dist/collection/collection-manifest.json",
   "scripts": {
@@ -11,8 +11,8 @@
     "build.panel": "stencil build",
     "build.bridge": "tsc -p src/helpers/tsconfig.json",
     "watch": "run-p watch.panel watch.bridge",
-    "watch.panel": "npm run clean && stencil build --dev --watch --serve",
-    "watch.bridge": "wait-on ./www/build && tsc -w -p src/helpers/tsconfig.json",
+    "watch.panel": "npm run clean && stencil build --dev --watch",
+    "watch.bridge": "wait-on www/build && tsc -w -p src/helpers/tsconfig.json",
     "lint": "npm run lint.ts && npm run prettier -- --check npm run lint.styles",
     "lint.ts": "eslint . --ext .ts",
     "lint.styles": "stylelint \"src/**/*.pcss\"",

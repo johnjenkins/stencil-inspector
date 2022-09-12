@@ -193,7 +193,13 @@
      *
      * In the case of props, we need to pass some flags to the value object to build the edit feature.
      */
-    private mapValue(members: any[], instance, parsedKeys: string[], canEdit = false, editInstance = false): import('./declarations').MembersMap {
+    private mapValue(
+      members: any[],
+      instance,
+      parsedKeys: string[],
+      canEdit = false,
+      editInstance = false
+    ): import('./declarations').MembersMap {
       return members.reduce<import('./declarations').MembersMap>((acc, member) => {
         const {
           name,
@@ -214,7 +220,8 @@
 
         let parsedMember: any = value;
 
-        if (Object.keys(props || {}).length > 0) {
+        // if (Object.keys(props || {}).length > 0) {
+        if (canEdit) {
           let type = typeof value.value;
           let canEditType = type === 'string' || type === 'boolean' || type === 'number';
 
@@ -246,6 +253,7 @@
               return watchersMap;
             }, {});
           }
+        // }
         }
 
         acc[actualName] = this.decycle(parsedMember);
@@ -298,8 +306,6 @@
           this.currentElement = newElement;
           this.currentComponentInstance = (await this.devInspector(newElement)) || null;
 
-          console.log('I GOT ', this.currentComponentInstance)
-
           const currentInstance = this.currentComponentInstance;
 
           if (currentInstance) {
@@ -339,8 +345,11 @@
                 .filter(key => !parsedKeys.includes(key))
                 .map(name => ({ name })) as any,
               fullInstance,
-              parsedKeys
+              parsedKeys,
+              true
             );
+
+            console.log('I GOT HERE?!!')
 
             msg.status.success = true;
             msg.categories = [

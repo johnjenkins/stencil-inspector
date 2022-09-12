@@ -31,7 +31,6 @@ export class Main {
 
   @autobind
   changeComponent(component: ParsedGroupData) {
-    console.log('????')
     this.component = component;
     this.loading = false;
   }
@@ -70,8 +69,6 @@ export class Main {
     } else if (itemsKeys.length === 0) {
       actualMessage = `Component has no items.`;
     }
-
-    console.log('render', itemsKeys, actualMessage)
 
     return [
       <sti-logo class="logo" dark={this.dark} />,

@@ -1,28 +1,28 @@
-import { Component, Prop, h, Host, Watch } from '@stencil/core';
+import { Component, Prop } from '@stencil/core';
 
 @Component({
-  tag: 'nice-cheese',
-  shadow: true,
+  tag: 'sti-message',
+  styleUrl: 'message.pcss',
+  shadow: true
 })
-export class AMessage {
-  /** Message text */
-  @Prop({reflect: true}) message = 'loading...';
+export class Message {
 
-  @Watch('message')
-  handleMessage(newVal, oldVal) {
-    console.log(newVal, oldVal)
-  }
+  @Prop() message = '';
 
-  /** Dark theme */
   @Prop() dark = false;
 
-  componentDidRender() {
-    console.log(this.message);
+  protected hostData() {
+    return {
+      class: {
+        dark: this.dark,
+        hidden: this.message.length === 0,
+        nice: 'good'
+      },
+      dataGood: 'good'
+    };
   }
 
-  render() {
-    return (
-      <Host>{this.message} hello <slot /></Host>
-    );
+  protected render() {
+    return this.message;
   }
 }

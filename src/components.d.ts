@@ -7,16 +7,6 @@
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { ItemData, ParsedCategoryData } from "~helpers/declarations";
 export namespace Components {
-    interface NiceCheese {
-        /**
-          * Dark theme
-         */
-        "dark": boolean;
-        /**
-          * Message text
-         */
-        "message": string;
-    }
     interface StiArrow {
         "direction": boolean;
     }
@@ -41,16 +31,14 @@ export namespace Components {
     }
     interface StiMain {
     }
+    interface StiMessage {
+        "dark": boolean;
+        "message": string;
+    }
     interface StiRefresh {
     }
 }
 declare global {
-    interface HTMLNiceCheeseElement extends Components.NiceCheese, HTMLStencilElement {
-    }
-    var HTMLNiceCheeseElement: {
-        prototype: HTMLNiceCheeseElement;
-        new (): HTMLNiceCheeseElement;
-    };
     interface HTMLStiArrowElement extends Components.StiArrow, HTMLStencilElement {
     }
     var HTMLStiArrowElement: {
@@ -87,6 +75,12 @@ declare global {
         prototype: HTMLStiMainElement;
         new (): HTMLStiMainElement;
     };
+    interface HTMLStiMessageElement extends Components.StiMessage, HTMLStencilElement {
+    }
+    var HTMLStiMessageElement: {
+        prototype: HTMLStiMessageElement;
+        new (): HTMLStiMessageElement;
+    };
     interface HTMLStiRefreshElement extends Components.StiRefresh, HTMLStencilElement {
     }
     var HTMLStiRefreshElement: {
@@ -94,27 +88,17 @@ declare global {
         new (): HTMLStiRefreshElement;
     };
     interface HTMLElementTagNameMap {
-        "nice-cheese": HTMLNiceCheeseElement;
         "sti-arrow": HTMLStiArrowElement;
         "sti-category": HTMLStiCategoryElement;
         "sti-item": HTMLStiItemElement;
         "sti-item-value": HTMLStiItemValueElement;
         "sti-logo": HTMLStiLogoElement;
         "sti-main": HTMLStiMainElement;
+        "sti-message": HTMLStiMessageElement;
         "sti-refresh": HTMLStiRefreshElement;
     }
 }
 declare namespace LocalJSX {
-    interface NiceCheese {
-        /**
-          * Dark theme
-         */
-        "dark"?: boolean;
-        /**
-          * Message text
-         */
-        "message"?: string;
-    }
     interface StiArrow {
         "direction"?: boolean;
     }
@@ -139,16 +123,20 @@ declare namespace LocalJSX {
     }
     interface StiMain {
     }
+    interface StiMessage {
+        "dark"?: boolean;
+        "message"?: string;
+    }
     interface StiRefresh {
     }
     interface IntrinsicElements {
-        "nice-cheese": NiceCheese;
         "sti-arrow": StiArrow;
         "sti-category": StiCategory;
         "sti-item": StiItem;
         "sti-item-value": StiItemValue;
         "sti-logo": StiLogo;
         "sti-main": StiMain;
+        "sti-message": StiMessage;
         "sti-refresh": StiRefresh;
     }
 }
@@ -156,13 +144,13 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
-            "nice-cheese": LocalJSX.NiceCheese & JSXBase.HTMLAttributes<HTMLNiceCheeseElement>;
             "sti-arrow": LocalJSX.StiArrow & JSXBase.HTMLAttributes<HTMLStiArrowElement>;
             "sti-category": LocalJSX.StiCategory & JSXBase.HTMLAttributes<HTMLStiCategoryElement>;
             "sti-item": LocalJSX.StiItem & JSXBase.HTMLAttributes<HTMLStiItemElement>;
             "sti-item-value": LocalJSX.StiItemValue & JSXBase.HTMLAttributes<HTMLStiItemValueElement>;
             "sti-logo": LocalJSX.StiLogo & JSXBase.HTMLAttributes<HTMLStiLogoElement>;
             "sti-main": LocalJSX.StiMain & JSXBase.HTMLAttributes<HTMLStiMainElement>;
+            "sti-message": LocalJSX.StiMessage & JSXBase.HTMLAttributes<HTMLStiMessageElement>;
             "sti-refresh": LocalJSX.StiRefresh & JSXBase.HTMLAttributes<HTMLStiRefreshElement>;
         }
     }

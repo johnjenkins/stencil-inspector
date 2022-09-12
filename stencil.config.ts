@@ -7,8 +7,6 @@ import postcssUrl from 'postcss-url';
 export const config: Config = {
   buildEs5: false,
   sourceMap: true,
-  namespace: 'sti',
-  allowInlineScripts: false,
   globalStyle: 'src/styles/global.css',
   plugins: [
     postcss({
@@ -19,6 +17,7 @@ export const config: Config = {
       ]
     })
   ],
+  namespace: 'stencil-inspector',
   outputTargets: [
     {
       type: 'dist',
@@ -28,7 +27,7 @@ export const config: Config = {
       type: 'www',
       serviceWorker: false,
       copy: [
-          {
+        {
           src: 'statics/**/**',
           dest: '.'
         },
